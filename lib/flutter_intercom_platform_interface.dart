@@ -38,6 +38,10 @@ abstract class FlutterIntercomPlatform extends PlatformInterface {
     throw UnimplementedError('loginUser() has not been implemented.');
   }
 
+  Future<void> setUserHash(String hash) {
+    throw UnimplementedError('setUserHash() has not been implemented.');
+  }
+
   Future<void> present(ICMSpace? space) {
     throw UnimplementedError('present() has not been implemented.');
   }

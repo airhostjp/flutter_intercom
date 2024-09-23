@@ -20,6 +20,9 @@ class MockFlutterIntercomPlatform
   Future<ICMLoginResult> loginUser(ICMUserAttributes userAttributes) => Future.value(ICMLoginResult());
 
   @override
+  Future<void> setUserHash(String hash) => Future.value();
+
+  @override
   Future<void> present(ICMSpace? space) => Future.value();
 
   @override

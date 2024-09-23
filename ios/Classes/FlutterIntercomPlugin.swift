@@ -66,6 +66,12 @@ public class FlutterIntercomPlugin: NSObject, FlutterPlugin {
                 }
             }
             return
+        case "setUserHash":
+            if let args = call.arguments as? [String: Any],
+               let hash = args["hash"] as? String {
+                Intercom.setUserHash(hash)
+            }
+            return
         case "present":
             if let args = call.arguments as? [String: Any],
                let space = args["space"] as? String {

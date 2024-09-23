@@ -40,6 +40,13 @@ class MethodChannelFlutterIntercom extends FlutterIntercomPlatform {
   }
 
   @override
+  Future<void> setUserHash(String hash) async {
+    await methodChannel.invokeMethod<void>('setUserHash', {
+      'hash': hash,
+    });
+  }
+
+  @override
   Future<void> present(ICMSpace? space) async {
     await methodChannel.invokeMethod<void>('present', {
       'space': space?.name,

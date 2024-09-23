@@ -23,6 +23,10 @@ class FlutterIntercom {
     return FlutterIntercomPlatform.instance.loginUser(userAttributes);
   }
 
+  Future<void> setUserHash(String hash) {
+    return FlutterIntercomPlatform.instance.setUserHash(hash);
+  }
+
   Future<void> present({ICMSpace? space}) {
     return FlutterIntercomPlatform.instance.present(space);
   }

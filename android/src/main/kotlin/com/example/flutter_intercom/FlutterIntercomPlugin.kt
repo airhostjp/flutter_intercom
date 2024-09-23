@@ -114,6 +114,14 @@ class FlutterIntercomPlugin: FlutterPlugin, MethodCallHandler {
         )
       }
 
+      "setUserHash" -> {
+        val args = call.arguments as? Map<*, *>
+        val hash = args?.get("hash") as? String
+        if (hash != null) {
+          Intercom.client().setUserHash(hash)
+        }
+      }
+
       "present" -> {
         val args = call.arguments as? Map<*, *>
         val space = args?.get("space") as? String
