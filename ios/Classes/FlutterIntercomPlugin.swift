@@ -42,12 +42,24 @@ public class FlutterIntercomPlugin: NSObject, FlutterPlugin {
         case "loginUser":
             let attributes = ICMUserAttributes()
             if let args = call.arguments as? [String: Any] {
-                attributes.userId = args["userId"] as? String
-                attributes.email = args["email"] as? String
-                attributes.phone = args["phone"] as? String
-                attributes.name = args["name"] as? String
-                attributes.languageOverride = args["languageOverride"] as? String
-                attributes.customAttributes = args["customAttributes"] as? [String: Any]
+                if let userId = args["userId"] as? String, !userId.isEmpty {
+                    attributes.userId = userId
+                }
+                if let email = args["email"] as? String, !email.isEmpty {
+                    attributes.email = email
+                }
+                if let phone = args["phone"] as? String, !phone.isEmpty {
+                    attributes.phone = phone
+                }
+                if let name = args["name"] as? String, !name.isEmpty {
+                    attributes.name = name
+                }
+                if let languageOverride = args["languageOverride"] as? String, !languageOverride.isEmpty {
+                    attributes.languageOverride = languageOverride
+                }
+                if let customAttributes = args["customAttributes"] as? [String: Any], !customAttributes.isEmpty {
+                    attributes.customAttributes = customAttributes
+                }
             }
             Intercom.loginUser(with: attributes) { res in
                 switch res {
