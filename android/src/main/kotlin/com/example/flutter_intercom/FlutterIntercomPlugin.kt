@@ -1,6 +1,7 @@
 package com.example.flutter_intercom
 
 import android.app.Application
+import android.util.Log
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
@@ -140,7 +141,11 @@ class FlutterIntercomPlugin: FlutterPlugin, MethodCallHandler {
       }
 
       "logout" -> {
-        Intercom.client().logout()
+        try {
+          Intercom.client().logout()
+        } catch (e: IllegalStateException) {
+          e.message?.let { Log.e("Intercom", it) }
+        }
       }
 
       else -> result.notImplemented()
