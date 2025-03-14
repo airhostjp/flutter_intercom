@@ -34,7 +34,8 @@ class FlutterIntercom {
 
   Future<void> hide() async {
     if (FlutterIntercomPlatform.isPresent) {
-      return FlutterIntercomPlatform.instance.hide();
+      await FlutterIntercomPlatform.instance.hide();
+      FlutterIntercomPlatform.isPresent = false;
     }
   }
 
