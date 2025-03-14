@@ -13,6 +13,8 @@ abstract class FlutterIntercomPlatform extends PlatformInterface {
 
   static FlutterIntercomPlatform _instance = MethodChannelFlutterIntercom();
 
+  static bool isPresent = false;
+
   /// The default instance of [FlutterIntercomPlatform] to use.
   ///
   /// Defaults to [MethodChannelFlutterIntercom].

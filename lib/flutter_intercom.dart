@@ -28,11 +28,14 @@ class FlutterIntercom {
   }
 
   Future<void> present({ICMSpace? space}) {
+    FlutterIntercomPlatform.isPresent = true;
     return FlutterIntercomPlatform.instance.present(space);
   }
 
-  Future<void> hide() {
-    return FlutterIntercomPlatform.instance.hide();
+  Future<void> hide() async {
+    if (FlutterIntercomPlatform.isPresent) {
+      return FlutterIntercomPlatform.instance.hide();
+    }
   }
 
   Future<void> logout() {
