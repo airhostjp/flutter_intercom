@@ -83,6 +83,7 @@ public class FlutterIntercomPlugin: NSObject, FlutterPlugin {
                let hash = args["hash"] as? String {
                 Intercom.setUserHash(hash)
             }
+            result("Success")
             return
         case "present":
             if let args = call.arguments as? [String: Any],
@@ -102,12 +103,15 @@ public class FlutterIntercomPlugin: NSObject, FlutterPlugin {
             } else {
                 Intercom.present()
             }
+            result("Success")
             return
         case "hide":
             Intercom.hide()
+            result("Success")
             return
         case "logout":
             Intercom.logout()
+            result("Success")
             return
         default:
             result(FlutterMethodNotImplemented)
