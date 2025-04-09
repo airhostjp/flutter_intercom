@@ -98,16 +98,19 @@ class FlutterIntercomPlugin: FlutterPlugin, MethodCallHandler {
           userRegistration = registration,
           intercomStatusCallback = object : IntercomStatusCallback{
             override fun onSuccess() {
-              mapOf(
-                "success" to true,
-                "message" to "Successfully logged in."
+              result.success(
+                mapOf(
+                  "success" to true, "message" to "Successfully logged in."
+                )
               )
             }
 
             override fun onFailure(intercomError: IntercomError) {
-              mapOf(
-                "success" to false,
-                "message" to intercomError.errorMessage
+              result.success(
+                mapOf(
+                  "success" to false,
+                  "message" to intercomError.errorMessage
+                )
               )
             }
 
