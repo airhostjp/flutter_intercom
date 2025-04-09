@@ -124,6 +124,7 @@ class FlutterIntercomPlugin: FlutterPlugin, MethodCallHandler {
         if (hash != null) {
           Intercom.client().setUserHash(hash)
         }
+        result.success("Success")
       }
 
       "present" -> {
@@ -137,10 +138,12 @@ class FlutterIntercomPlugin: FlutterPlugin, MethodCallHandler {
           "tickets" -> Intercom.client().present(IntercomSpace.Tickets)
           else -> Intercom.client().present(IntercomSpace.Home)
         }
+        result.success("Success")
       }
 
       "hide" -> {
         Intercom.client().hideIntercom()
+        result.success("Success")
       }
 
       "logout" -> {
@@ -149,6 +152,7 @@ class FlutterIntercomPlugin: FlutterPlugin, MethodCallHandler {
         } catch (e: IllegalStateException) {
           e.message?.let { Log.e("Intercom", it) }
         }
+        result.success("Success")
       }
 
       else -> result.notImplemented()
