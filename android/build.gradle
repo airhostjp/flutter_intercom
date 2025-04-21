@@ -68,5 +68,5 @@ android {
 }
 
 dependencies {
-    implementation 'io.intercom.android:intercom-sdk:latest.release'
+    implementation 'io.intercom.android:intercom-sdk:15.15.2'
 }
