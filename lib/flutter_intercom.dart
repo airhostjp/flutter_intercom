@@ -3,16 +3,14 @@ import 'package:flutter_intercom/models/intercom_user_attributes.dart';
 
 import 'flutter_intercom_platform_interface.dart';
 
-enum ICMSpace {
-  home,
-  helpCenter,
-  messages,
-  tickets,
-}
+enum ICMSpace { home, helpCenter, messages, tickets }
 
 class FlutterIntercom {
-  Future<void> setApiKeyForAppId({String? apiKey, String? appId}) {
-    return FlutterIntercomPlatform.instance.setApiKeyForAppId(apiKey: apiKey, appId: appId);
+  Future<void> setApiKeyForAppId({String? apiKey, String? appId}) async {
+    await FlutterIntercomPlatform.instance.setApiKeyForAppId(
+      apiKey: apiKey,
+      appId: appId,
+    );
   }
 
   Future<ICMLoginResult> loginUnidentifiedUser() {
@@ -27,19 +25,18 @@ class FlutterIntercom {
     return FlutterIntercomPlatform.instance.setUserHash(hash);
   }
 
-  Future<void> present({ICMSpace? space}) {
+  Future<void> present({ICMSpace? space}) async {
+    await FlutterIntercomPlatform.instance.present(space);
     FlutterIntercomPlatform.isPresent = true;
-    return FlutterIntercomPlatform.instance.present(space);
   }
 
   Future<void> hide() async {
-    if (FlutterIntercomPlatform.isPresent) {
-      await FlutterIntercomPlatform.instance.hide();
-      FlutterIntercomPlatform.isPresent = false;
-    }
+    await FlutterIntercomPlatform.instance.hide();
+    FlutterIntercomPlatform.isPresent = false;
   }
 
-  Future<void> logout() {
-    return FlutterIntercomPlatform.instance.logout();
+  Future<void> logout() async {
+    await FlutterIntercomPlatform.instance.logout();
+    FlutterIntercomPlatform.isPresent = false;
   }
 }

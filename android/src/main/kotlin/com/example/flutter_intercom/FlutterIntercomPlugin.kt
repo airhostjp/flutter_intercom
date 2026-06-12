@@ -24,6 +24,10 @@ class FlutterIntercomPlugin: FlutterPlugin, MethodCallHandler {
   private lateinit var channel : MethodChannel
   private var application: Application? = null
 
+  companion object {
+    private var isInitialized = false
+  }
+
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     application = flutterPluginBinding.applicationContext as Application
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_intercom")
@@ -37,15 +41,33 @@ class FlutterIntercomPlugin: FlutterPlugin, MethodCallHandler {
         val apiKey = args?.get("apiKey") as? String
         val appId = args?.get("appId") as? String
 
-        if (apiKey != null && appId != null) {
-          Intercom.initialize(application, apiKey, appId)
+        val app = application
+        if (apiKey != null && appId != null && app != null) {
+          try {
+            Intercom.initialize(app, apiKey, appId)
+            isInitialized = true
+          } catch (e: Exception) {
+            isInitialized = false
+            result.error("INTERCOM_INITIALIZE_ERROR", e.message, null)
+            return
+          }
           result.success("Success")
         } else {
+          isInitialized = false
           result.error("ERROR", "Invalid arguments", null)
         }
       }
 
       "loginUnidentifiedUser" -> {
+        if (!isInitialized) {
+          result.success(
+            mapOf(
+              "success" to false,
+              "message" to "Intercom has not been initialized."
+            )
+          )
+          return
+        }
         Intercom.client().loginUnidentifiedUser(
           intercomStatusCallback = object : IntercomStatusCallback {
             override fun onSuccess() {
@@ -71,6 +93,15 @@ class FlutterIntercomPlugin: FlutterPlugin, MethodCallHandler {
       }
 
       "loginUser" -> {
+        if (!isInitialized) {
+          result.success(
+            mapOf(
+              "success" to false,
+              "message" to "Intercom has not been initialized."
+            )
+          )
+          return
+        }
         val args = call.arguments as? Map<*, *>
         val userId = args?.get("userId") as String? ?: ""
         val email = args?.get("email") as String? ?: ""
@@ -119,6 +150,10 @@ class FlutterIntercomPlugin: FlutterPlugin, MethodCallHandler {
       }
 
       "setUserHash" -> {
+        if (!isInitialized) {
+          result.success("Skipped")
+          return
+        }
         val args = call.arguments as? Map<*, *>
         val hash = args?.get("hash") as? String
         if (hash != null) {
@@ -128,6 +163,10 @@ class FlutterIntercomPlugin: FlutterPlugin, MethodCallHandler {
       }
 
       "present" -> {
+        if (!isInitialized) {
+          result.success("Skipped")
+          return
+        }
         val args = call.arguments as? Map<*, *>
         val space = args?.get("space") as? String
 
@@ -142,14 +181,24 @@ class FlutterIntercomPlugin: FlutterPlugin, MethodCallHandler {
       }
 
       "hide" -> {
+        if (!isInitialized) {
+          result.success("Skipped")
+          return
+        }
         Intercom.client().hideIntercom()
         result.success("Success")
       }
 
       "logout" -> {
+        if (!isInitialized) {
+          result.success("Skipped")
+          return
+        }
         try {
           Intercom.client().logout()
+          isInitialized = false
         } catch (e: IllegalStateException) {
+          isInitialized = false
           e.message?.let { Log.e("Intercom", it) }
         }
         result.success("Success")
