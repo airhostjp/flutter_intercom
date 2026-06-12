@@ -3,6 +3,8 @@ import UIKit
 import Intercom
 
 public class FlutterIntercomPlugin: NSObject, FlutterPlugin {
+    private static var isInitialized = false
+
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "flutter_intercom", binaryMessenger: registrar.messenger())
         let instance = FlutterIntercomPlugin()
@@ -16,12 +18,21 @@ public class FlutterIntercomPlugin: NSObject, FlutterPlugin {
                let apiKey = args["apiKey"] as? String,
                let appId = args["appId"] as? String {
                 Intercom.setApiKey(apiKey, forAppId: appId)
+                FlutterIntercomPlugin.isInitialized = true
                 result("Success")
             } else {
+                FlutterIntercomPlugin.isInitialized = false
                 result(FlutterError(code: "ERROR", message: "Invalid arguments", details: nil))
             }
             return
         case "loginUnidentifiedUser":
+            guard FlutterIntercomPlugin.isInitialized else {
+                result([
+                    "success": false,
+                    "message": "Intercom has not been initialized.",
+                ])
+                return
+            }
             Intercom.loginUnidentifiedUser { res in
                 switch res {
                 case .success:
@@ -40,6 +51,13 @@ public class FlutterIntercomPlugin: NSObject, FlutterPlugin {
             }
             return
         case "loginUser":
+            guard FlutterIntercomPlugin.isInitialized else {
+                result([
+                    "success": false,
+                    "message": "Intercom has not been initialized.",
+                ])
+                return
+            }
             let attributes = ICMUserAttributes()
             if let args = call.arguments as? [String: Any] {
                 if let userId = args["userId"] as? String, !userId.isEmpty {
@@ -79,6 +97,10 @@ public class FlutterIntercomPlugin: NSObject, FlutterPlugin {
             }
             return
         case "setUserHash":
+            guard FlutterIntercomPlugin.isInitialized else {
+                result("Skipped")
+                return
+            }
             if let args = call.arguments as? [String: Any],
                let hash = args["hash"] as? String {
                 Intercom.setUserHash(hash)
@@ -86,6 +108,10 @@ public class FlutterIntercomPlugin: NSObject, FlutterPlugin {
             result("Success")
             return
         case "present":
+            guard FlutterIntercomPlugin.isInitialized else {
+                result("Skipped")
+                return
+            }
             if let args = call.arguments as? [String: Any],
                let space = args["space"] as? String {
                 switch space {
@@ -106,11 +132,20 @@ public class FlutterIntercomPlugin: NSObject, FlutterPlugin {
             result("Success")
             return
         case "hide":
+            guard FlutterIntercomPlugin.isInitialized else {
+                result("Skipped")
+                return
+            }
             Intercom.hide()
             result("Success")
             return
         case "logout":
+            guard FlutterIntercomPlugin.isInitialized else {
+                result("Skipped")
+                return
+            }
             Intercom.logout()
+            FlutterIntercomPlugin.isInitialized = false
             result("Success")
             return
         default:

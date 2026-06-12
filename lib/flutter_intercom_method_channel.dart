@@ -14,42 +14,37 @@ class MethodChannelFlutterIntercom extends FlutterIntercomPlatform {
 
   @override
   Future<void> setApiKeyForAppId({String? apiKey, String? appId}) async {
-    try {
-      await methodChannel.invokeMethod<void>('setApiKeyForAppId', {
-        'apiKey': apiKey,
-        'appId': appId,
-      });
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error setting API key for app ID: $e');
-      }
-    }
+    await methodChannel.invokeMethod<void>('setApiKeyForAppId', {
+      'apiKey': apiKey,
+      'appId': appId,
+    });
   }
 
   @override
   Future<ICMLoginResult> loginUnidentifiedUser() async {
-    final dynamic result = await methodChannel.invokeMethod<dynamic>('loginUnidentifiedUser');
+    final dynamic result = await methodChannel.invokeMethod<dynamic>(
+      'loginUnidentifiedUser',
+    );
     return ICMLoginResult.fromJson(result.cast<String, dynamic>());
   }
 
   @override
   Future<ICMLoginResult> loginUser(ICMUserAttributes userAttributes) async {
-    final dynamic result = await methodChannel.invokeMethod<dynamic>('loginUser', userAttributes.toJson());
+    final dynamic result = await methodChannel.invokeMethod<dynamic>(
+      'loginUser',
+      userAttributes.toJson(),
+    );
     return ICMLoginResult.fromJson(result.cast<String, dynamic>());
   }
 
   @override
   Future<void> setUserHash(String hash) async {
-    await methodChannel.invokeMethod<void>('setUserHash', {
-      'hash': hash,
-    });
+    await methodChannel.invokeMethod<void>('setUserHash', {'hash': hash});
   }
 
   @override
   Future<void> present(ICMSpace? space) async {
-    await methodChannel.invokeMethod<void>('present', {
-      'space': space?.name,
-    });
+    await methodChannel.invokeMethod<void>('present', {'space': space?.name});
   }
 
   @override
