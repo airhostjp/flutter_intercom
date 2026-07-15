@@ -9,6 +9,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.intercom.android.sdk.Intercom
+import io.intercom.android.sdk.IntercomContent
 import io.intercom.android.sdk.IntercomError
 import io.intercom.android.sdk.IntercomSpace
 import io.intercom.android.sdk.IntercomStatusCallback
@@ -177,6 +178,21 @@ class FlutterIntercomPlugin: FlutterPlugin, MethodCallHandler {
           "tickets" -> Intercom.client().present(IntercomSpace.Tickets)
           else -> Intercom.client().present(IntercomSpace.Home)
         }
+        result.success("Success")
+      }
+
+      "presentArticle" -> {
+        if (!isInitialized) {
+          result.success("Skipped")
+          return
+        }
+        val args = call.arguments as? Map<*, *>
+        val articleId = args?.get("articleId") as? String
+        if (articleId.isNullOrEmpty()) {
+          result.error("ERROR", "Invalid articleId", null)
+          return
+        }
+        Intercom.client().presentContent(IntercomContent.Article(articleId))
         result.success("Success")
       }
 

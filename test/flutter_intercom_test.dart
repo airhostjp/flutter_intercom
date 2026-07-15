@@ -11,6 +11,7 @@ class MockFlutterIntercomPlatform
     implements FlutterIntercomPlatform {
   bool setApiKeyForAppIdCalled = false;
   bool presentCalled = false;
+  bool presentArticleCalled = false;
   bool logoutCalled = false;
 
   @override
@@ -32,6 +33,11 @@ class MockFlutterIntercomPlatform
   @override
   Future<void> present(ICMSpace? space) async {
     presentCalled = true;
+  }
+
+  @override
+  Future<void> presentArticle(String articleId) async {
+    presentArticleCalled = true;
   }
 
   @override
@@ -79,6 +85,13 @@ void main() {
     await flutterIntercomPlugin.present(space: ICMSpace.home);
 
     expect(fakePlatform.presentCalled, isTrue);
+    expect(FlutterIntercomPlatform.isPresent, isTrue);
+  });
+
+  test('presentArticle forwards to platform and marks UI as present', () async {
+    await flutterIntercomPlugin.presentArticle('15941255');
+
+    expect(fakePlatform.presentArticleCalled, isTrue);
     expect(FlutterIntercomPlatform.isPresent, isTrue);
   });
 

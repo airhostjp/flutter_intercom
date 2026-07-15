@@ -48,6 +48,12 @@ class MethodChannelFlutterIntercom extends FlutterIntercomPlatform {
   }
 
   @override
+  Future<void> presentArticle(String articleId) async {
+    await methodChannel
+        .invokeMethod<void>('presentArticle', {'articleId': articleId});
+  }
+
+  @override
   Future<void> hide() async {
     await methodChannel.invokeMethod<void>('hide');
   }

@@ -30,6 +30,11 @@ class FlutterIntercom {
     FlutterIntercomPlatform.isPresent = true;
   }
 
+  Future<void> presentArticle(String articleId) async {
+    await FlutterIntercomPlatform.instance.presentArticle(articleId);
+    FlutterIntercomPlatform.isPresent = true;
+  }
+
   Future<void> hide() async {
     await FlutterIntercomPlatform.instance.hide();
     FlutterIntercomPlatform.isPresent = false;
