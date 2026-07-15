@@ -33,7 +33,8 @@ abstract class FlutterIntercomPlatform extends PlatformInterface {
   }
 
   Future<ICMLoginResult> loginUnidentifiedUser() {
-    throw UnimplementedError('loginUnidentifiedUser() has not been implemented.');
+    throw UnimplementedError(
+        'loginUnidentifiedUser() has not been implemented.');
   }
 
   Future<ICMLoginResult> loginUser(ICMUserAttributes userAttributes) {
@@ -46,6 +47,10 @@ abstract class FlutterIntercomPlatform extends PlatformInterface {
 
   Future<void> present(ICMSpace? space) {
     throw UnimplementedError('present() has not been implemented.');
+  }
+
+  Future<void> presentArticle(String articleId) {
+    throw UnimplementedError('presentArticle() has not been implemented.');
   }
 
   Future<void> hide() {

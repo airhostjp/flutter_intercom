@@ -131,6 +131,20 @@ public class FlutterIntercomPlugin: NSObject, FlutterPlugin {
             }
             result("Success")
             return
+        case "presentArticle":
+            guard FlutterIntercomPlugin.isInitialized else {
+                result("Skipped")
+                return
+            }
+            guard let args = call.arguments as? [String: Any],
+                  let articleId = args["articleId"] as? String,
+                  !articleId.isEmpty else {
+                result(FlutterError(code: "ERROR", message: "Invalid articleId", details: nil))
+                return
+            }
+            Intercom.presentContent(.article(id: articleId))
+            result("Success")
+            return
         case "hide":
             guard FlutterIntercomPlugin.isInitialized else {
                 result("Skipped")
