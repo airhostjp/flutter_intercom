@@ -38,6 +38,14 @@ class MethodChannelFlutterIntercom extends FlutterIntercomPlatform {
   }
 
   @override
+  Future<void> setLanguageOverride(String languageCode) async {
+    await methodChannel.invokeMethod<void>(
+      'setLanguageOverride',
+      <String, String>{'languageCode': languageCode},
+    );
+  }
+
+  @override
   Future<void> setUserHash(String hash) async {
     await methodChannel.invokeMethod<void>('setUserHash', {'hash': hash});
   }

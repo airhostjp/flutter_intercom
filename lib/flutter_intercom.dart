@@ -21,6 +21,10 @@ class FlutterIntercom {
     return FlutterIntercomPlatform.instance.loginUser(userAttributes);
   }
 
+  Future<void> setLanguageOverride(String languageCode) {
+    return FlutterIntercomPlatform.instance.setLanguageOverride(languageCode);
+  }
+
   Future<void> setUserHash(String hash) {
     return FlutterIntercomPlatform.instance.setUserHash(hash);
   }

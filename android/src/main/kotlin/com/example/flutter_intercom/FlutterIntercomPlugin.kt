@@ -150,6 +150,34 @@ class FlutterIntercomPlugin: FlutterPlugin, MethodCallHandler {
         )
       }
 
+      "setLanguageOverride" -> {
+        if (!isInitialized) {
+          result.error("INTERCOM_NOT_INITIALIZED", "Intercom has not been initialized.", null)
+          return
+        }
+        val args = call.arguments as? Map<*, *>
+        val languageOverride = args?.get("languageCode") as? String
+        if (languageOverride.isNullOrEmpty()) {
+          result.error("INVALID_ARGUMENT", "languageOverride must not be empty.", null)
+          return
+        }
+        val attributes = UserAttributes.Builder()
+          .withLanguageOverride(languageOverride)
+          .build()
+        Intercom.client().updateUser(
+          userAttributes = attributes,
+          intercomStatusCallback = object : IntercomStatusCallback {
+            override fun onSuccess() {
+              result.success(null)
+            }
+
+            override fun onFailure(intercomError: IntercomError) {
+              result.error("INTERCOM_UPDATE_USER_ERROR", intercomError.errorMessage, null)
+            }
+          }
+        )
+      }
+
       "setUserHash" -> {
         if (!isInitialized) {
           result.success("Skipped")
