@@ -96,6 +96,40 @@ public class FlutterIntercomPlugin: NSObject, FlutterPlugin {
                 }
             }
             return
+        case "setLanguageOverride":
+            guard FlutterIntercomPlugin.isInitialized else {
+                result(FlutterError(
+                    code: "INTERCOM_NOT_INITIALIZED",
+                    message: "Intercom has not been initialized.",
+                    details: nil
+                ))
+                return
+            }
+            guard let args = call.arguments as? [String: Any],
+                  let languageOverride = args["languageCode"] as? String,
+                  !languageOverride.isEmpty else {
+                result(FlutterError(
+                    code: "INVALID_ARGUMENT",
+                    message: "languageOverride must not be empty.",
+                    details: nil
+                ))
+                return
+            }
+            let attributes = ICMUserAttributes()
+            attributes.languageOverride = languageOverride
+            Intercom.updateUser(with: attributes) { updateResult in
+                switch updateResult {
+                case .success:
+                    result(nil)
+                case .failure(let error):
+                    result(FlutterError(
+                        code: "INTERCOM_UPDATE_USER_ERROR",
+                        message: error.localizedDescription,
+                        details: nil
+                    ))
+                }
+            }
+            return
         case "setUserHash":
             guard FlutterIntercomPlugin.isInitialized else {
                 result("Skipped")

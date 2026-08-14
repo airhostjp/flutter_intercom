@@ -13,6 +13,7 @@ class MockFlutterIntercomPlatform
   bool presentCalled = false;
   bool presentArticleCalled = false;
   bool logoutCalled = false;
+  String? languageOverride;
 
   @override
   Future<void> setApiKeyForAppId({String? apiKey, String? appId}) async {
@@ -26,6 +27,11 @@ class MockFlutterIntercomPlatform
   @override
   Future<ICMLoginResult> loginUser(ICMUserAttributes userAttributes) =>
       Future.value(ICMLoginResult());
+
+  @override
+  Future<void> setLanguageOverride(String languageCode) async {
+    languageOverride = languageCode;
+  }
 
   @override
   Future<void> setUserHash(String hash) => Future.value();
@@ -86,6 +92,12 @@ void main() {
 
     expect(fakePlatform.presentCalled, isTrue);
     expect(FlutterIntercomPlatform.isPresent, isTrue);
+  });
+
+  test('setLanguageOverride forwards language code to platform', () async {
+    await flutterIntercomPlugin.setLanguageOverride('ja');
+
+    expect(fakePlatform.languageOverride, 'ja');
   });
 
   test('presentArticle forwards to platform and marks UI as present', () async {
